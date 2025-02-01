@@ -8,29 +8,27 @@ import org.springframework.data.annotation.Id;
 import java.util.Objects;
 
 public class EventItem {
+
     @Id
     private String id;
-    private String description;
+    private String name;
     private String owner;
-    private boolean finished;
+    private String description;
+    private String ptsLimit;
+    private String restrictions;
+    private String playerLimit;
+    private String gameCount;
+    private String startDate;
+    private String endDate;
 
     public EventItem() {
     }
 
-    public EventItem(String id, String description, String owner) {
-        this.description = description;
-        this.id = id;
-        this.owner = owner;
-        this.finished = false;
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinish(boolean finished) {
-        this.finished = finished;
-    }
+//    public EventItem(String id, String description, String owner) {
+//        this.description = description;
+//        this.id = id;
+//        this.owner = owner;
+//    }
 
     public String getDescription() {
         return description;
@@ -56,32 +54,75 @@ public class EventItem {
         this.id = id;
     }
 
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getGameCount() {
+        return gameCount;
+    }
+
+    public void setGameCount(String gameCount) {
+        this.gameCount = gameCount;
+    }
+
+    public String getPlayerLimit() {
+        return playerLimit;
+    }
+
+    public void setPlayerLimit(String playerLimit) {
+        this.playerLimit = playerLimit;
+    }
+
+    public String getRestrictions() {
+        return restrictions;
+    }
+
+    public void setRestrictions(String restrictions) {
+        this.restrictions = restrictions;
+    }
+
+    public String getPtsLimit() {
+        return ptsLimit;
+    }
+
+    public void setPtsLimit(String ptsLimit) {
+        this.ptsLimit = ptsLimit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (!(o instanceof EventItem)) {
-            return false;
-        }
-        final EventItem group = (EventItem) o;
-        return Objects.equals(this.getDescription(), group.getDescription())
-                && Objects.equals(this.getOwner(), group.getOwner())
-                && Objects.equals(this.getId(), group.getId());
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, id, owner);
+        return super.hashCode();
     }
 
     @Override
     public String toString() {
-        if (id != null) {
-            return id + ": " + description;
-        } else {
-            return description;
-        }
+        return super.toString();
     }
 }
 
