@@ -1,6 +1,7 @@
 package com.microsoft.azure.appservice.examples.springbootmongodb.controller;
 
 import com.microsoft.azure.appservice.examples.springbootmongodb.dao.EventRepository;
+import com.microsoft.azure.appservice.examples.springbootmongodb.model.BdpResp;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,12 +49,15 @@ public class EventController {
      * HTTP POST NEW ONE
      */
     @PostMapping(path = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String addNewEventItem(@RequestBody EventItem item) {
+    public BdpResp addNewEventItem(@RequestBody EventItem item) {
         logger.info("POST request access '/api/event' path with item: {}", item);
+        BdpResp resp = new BdpResp();
         try {
             item.setId(UUID.randomUUID().toString());
             eventRepository.save(item);
-            return "Event item created";
+            resp.setStatus("success");
+            resp.setMessage("Event item created");
+            return resp;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item creation failed");
         }
