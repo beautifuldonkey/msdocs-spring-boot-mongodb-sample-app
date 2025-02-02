@@ -3,6 +3,7 @@ package com.microsoft.azure.appservice.examples.springbootmongodb.controller;
 import com.microsoft.azure.appservice.examples.springbootmongodb.dao.EventRepository;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.BdpResp;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventItem;
+import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,26 @@ public class EventController {
             eventRepository.save(item);
             resp.setStatus("success");
             resp.setMessage("Event item created");
+            return resp;
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item creation failed");
+        }
+    }
+
+    /**
+     * HTTP POST PARTICIPANT TO EVENT
+     */
+    @PostMapping(path = "/api/event/participant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BdpResp addEventParticipant(@RequestBody EventParticipant item) {
+        logger.info("POST request access '/api/event' path with item: {}", item);
+        BdpResp resp = new BdpResp();
+        try {
+            EventItem event = eventRepository.findById(item.getId()).get();
+            event.getApplicants().add(item.getUser());
+
+
+            resp.setStatus("success");
+            resp.setMessage("Event participant added");
             return resp;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item creation failed");

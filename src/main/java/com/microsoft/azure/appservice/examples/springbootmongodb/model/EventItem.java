@@ -5,6 +5,7 @@ package com.microsoft.azure.appservice.examples.springbootmongodb.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class EventItem {
@@ -18,6 +19,8 @@ public class EventItem {
     private String restrictions;
     private String playerLimit;
     private String gameCount;
+    private ArrayList applicants;
+    private ArrayList games;
     private String startDate;
     private String endDate;
 
@@ -108,6 +111,22 @@ public class EventItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ArrayList getApplicants() {
+        return applicants;
+    }
+
+    public void setApplicants(ArrayList applicants) {
+        this.applicants = applicants;
+    }
+
+    public ArrayList getGames() {
+        return games;
+    }
+
+    public void setGames(ArrayList games) {
+        this.games = games;
     }
 
     @Override
