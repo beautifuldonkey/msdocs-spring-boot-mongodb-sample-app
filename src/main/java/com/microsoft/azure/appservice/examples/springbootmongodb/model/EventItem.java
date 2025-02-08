@@ -27,12 +27,6 @@ public class EventItem {
     public EventItem() {
     }
 
-//    public EventItem(String id, String description, String owner) {
-//        this.description = description;
-//        this.id = id;
-//        this.owner = owner;
-//    }
-
     public String getDescription() {
         return description;
     }

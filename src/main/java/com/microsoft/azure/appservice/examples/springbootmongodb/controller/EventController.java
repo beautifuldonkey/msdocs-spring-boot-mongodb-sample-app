@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,7 +74,12 @@ public class EventController {
         BdpResp resp = new BdpResp();
         try {
             EventItem event = eventRepository.findById(item.getId()).get();
-            event.getApplicants().add(item.getUser());
+            if(event.getApplicants() != null) {
+                event.getApplicants().add(item.getUser());
+            } else {
+                event.setApplicants(new ArrayList());
+                event.getApplicants().add(item.getUser());
+            }
 
 
             resp.setStatus("success");
