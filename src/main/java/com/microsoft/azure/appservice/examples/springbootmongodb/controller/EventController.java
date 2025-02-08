@@ -69,7 +69,7 @@ public class EventController {
      */
     @PostMapping(path = "/api/event/participant", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BdpResp addEventParticipant(@RequestBody EventParticipant item) {
-        logger.info("POST request access '/api/event' path with item: {}", item);
+        logger.info("POST request access '/api/event/participant' path with item: {}", item);
         BdpResp resp = new BdpResp();
         try {
             EventItem event = eventRepository.findById(item.getId()).get();
@@ -78,8 +78,10 @@ public class EventController {
 
             resp.setStatus("success");
             resp.setMessage("Event participant added");
+            eventRepository.save(event);
             return resp;
         } catch (Exception e) {
+            logger.error("Participant add errors: ", e);
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item creation failed");
         }
     }
