@@ -81,14 +81,13 @@ public class EventController {
                 event.getApplicants().add(item.getUser());
             }
 
-
+            eventRepository.save(event);
             resp.setStatus("success");
             resp.setMessage("Event participant added");
-            eventRepository.save(event);
             return resp;
         } catch (Exception e) {
             logger.error("Participant add errors: ", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item creation failed");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant add failed");
         }
     }
 
