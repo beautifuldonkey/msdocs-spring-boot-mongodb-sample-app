@@ -55,13 +55,17 @@ public class EventController {
         logger.info("POST request access '/api/event' path with item: {}", item);
         BdpResp resp = new BdpResp();
         try {
-            item.setId(UUID.randomUUID().toString());
+            if(item.getId() == null) {
+                item.setId(UUID.randomUUID().toString());
+            } else {
+                eventRepository.deleteById(item.getId());
+            }
             eventRepository.save(item);
             resp.setStatus("success");
-            resp.setMessage("Event item created");
+            resp.setMessage("Event item saved");
             return resp;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item creation failed");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item save failed");
         }
     }
 
