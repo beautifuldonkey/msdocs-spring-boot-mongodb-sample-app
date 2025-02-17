@@ -60,7 +60,8 @@ public class EventController {
             } else {
                 eventRepository.deleteById(item.getId());
             }
-            eventRepository.save(item);
+            EventItem createdItem = eventRepository.save(item);
+            resp.setData(createdItem.getId());
             resp.setStatus("success");
             resp.setMessage("Event item saved");
             return resp;
