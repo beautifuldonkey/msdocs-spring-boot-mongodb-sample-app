@@ -115,14 +115,17 @@ public class EventController {
      * HTTP DELETE
      */
     @DeleteMapping("/api/event/{id}")
-    public String deleteEventItem(@PathVariable("id") String id) {
+    public BdpResp deleteEventItem(@PathVariable("id") String id) {
         logger.info("DELETE request access '/api/event/{}' path.", id);
+        BdpResp resp = new BdpResp();
         try {
             eventRepository.deleteById(id);
-            return "Todo item deleted";
+            resp.setStatus("success");
+            resp.setMessage("Event deleted");
+            return resp;
         } catch (Exception e) {
             logger.error("Delete errors: ", e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo item not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event delete failed");
         }
 
     }
