@@ -1,11 +1,11 @@
 package com.microsoft.azure.appservice.examples.springbootmongodb.model;
 
-public class EventParticipant {
+public class EventApplication {
 
     private String id;
-    private Object user;
+    private EventUser user;
 
-    public EventParticipant() {
+    public EventApplication() {
     }
 
     public String getId() {
@@ -16,11 +16,11 @@ public class EventParticipant {
         this.id = id;
     }
 
-    public Object getUser() {
+    public EventUser getUser() {
         return user;
     }
 
-    public void setUser(Object user) {
+    public void setUser(EventUser user) {
         this.user = user;
     }
 }
