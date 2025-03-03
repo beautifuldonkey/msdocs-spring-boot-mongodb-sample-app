@@ -4,7 +4,7 @@ import com.microsoft.azure.appservice.examples.springbootmongodb.dao.EventReposi
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.BdpResp;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventApplication;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventItem;
-//import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventParticipant;
+import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,10 +80,10 @@ public class EventController {
         BdpResp resp = new BdpResp();
         try {
             EventItem event = eventRepository.findById(item.getId()).get();
-            ArrayList<EventApplication> applicants = event.getApplicants();
+            ArrayList<EventUser> applicants = event.getApplicants();
             if(applicants != null) {
-                for(EventApplication applicant : applicants) {
-                    if(applicant.getUser().getId().equals(item.getUser().getId())) {
+                for(EventUser applicant : applicants) {
+                    if(applicant.getId().equals(item.getUser().getId())) {
                         throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant already exists");
                     }
                 }
