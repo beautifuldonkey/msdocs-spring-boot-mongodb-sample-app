@@ -20,6 +20,7 @@ public class EventItem {
     private String playerLimit;
     private String gameCount;
     private ArrayList applicants;
+    private ArrayList participants;
     private ArrayList games;
     private String startDate;
     private String endDate;
@@ -113,6 +114,14 @@ public class EventItem {
 
     public void setApplicants(ArrayList applicants) {
         this.applicants = applicants;
+    }
+
+    public ArrayList getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(ArrayList participants) {
+        this.participants = participants;
     }
 
     public ArrayList getGames() {
