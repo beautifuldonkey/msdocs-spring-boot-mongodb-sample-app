@@ -79,7 +79,7 @@ public class EventController {
         logger.info("POST request access '/api/event/participant' path with item: {}", item);
         BdpResp resp = new BdpResp();
         try {
-            EventItem event = eventRepository.findById(item.getId()).get();
+            EventItem event = eventRepository.findById(item.getId()).isPresent() ? eventRepository.findById(item.getId()).get() : null;
             ArrayList<EventUser> applicants = event.getApplicants();
             if(applicants != null) {
                 for(EventUser applicant : applicants) {
@@ -99,7 +99,7 @@ public class EventController {
             return resp;
         } catch (Exception e) {
             logger.error("Participant add errors: ", e);
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant add failed");
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Event participant add failed");
         }
     }
 
