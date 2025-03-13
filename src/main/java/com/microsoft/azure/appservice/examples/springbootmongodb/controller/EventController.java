@@ -84,6 +84,9 @@ public class EventController {
             if(applicants != null) {
                 for(EventUser applicant : applicants) {
                     if(applicant.getId().equals(item.getUser().getId())) {
+                        logger.error("Participant already exists");
+                        logger.error("existing appId: {}", applicant.getId());
+                        logger.error("new appId: {}", item.getUser().getId());
                         throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant already exists");
                     }
                 }
