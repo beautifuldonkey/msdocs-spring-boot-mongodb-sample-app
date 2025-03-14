@@ -1,5 +1,6 @@
 package com.microsoft.azure.appservice.examples.springbootmongodb.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.appservice.examples.springbootmongodb.dao.EventRepository;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.BdpResp;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventApplication;
@@ -78,22 +79,25 @@ public class EventController {
     public BdpResp addEventParticipant(@RequestBody EventApplication item) {
         logger.info("POST request access '/api/event/participant' path with item: {}", item);
         BdpResp resp = new BdpResp();
+        ObjectMapper mapper = new ObjectMapper();
         try {
             EventItem event = eventRepository.findById(item.getId()).isPresent() ? eventRepository.findById(item.getId()).get() : null;
             ArrayList<EventUser> applicants = event.getApplicants();
-            if(applicants != null) {
-                for(EventUser applicant : applicants) {
-                    if(applicant.getId().equals(item.getUser().getId())) {
+            if (applicants != null) {
+                for (EventUser applicant : applicants) {
+                    if (applicant.getId().equals(item.getUser().getId())) {
                         logger.error("Participant already exists");
                         logger.error("existing appId: {}", applicant.getId());
                         logger.error("new appId: {}", item.getUser().getId());
                         throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant already exists");
                     }
                 }
-                event.getApplicants().add(item.getUser());
+                EventUser user = mapper.convertValue(item.getUser(), EventUser.class);
+                event.getApplicants().add(user);
             } else {
-                event.setApplicants(new ArrayList());
-                event.getApplicants().add(item.getUser());
+                event.setApplicants(new ArrayList<>());
+                EventUser user = mapper.convertValue(item.getUser(), EventUser.class);
+                event.getApplicants().add(user);
             }
 
             eventRepository.save(event);
