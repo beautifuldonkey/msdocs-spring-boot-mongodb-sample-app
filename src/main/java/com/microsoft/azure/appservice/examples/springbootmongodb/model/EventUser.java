@@ -1,11 +1,13 @@
 package com.microsoft.azure.appservice.examples.springbootmongodb.model;
 
+import java.util.Map;
+
 public class EventUser {
 
     private String id;
     private String username;
     private String status;
-    private Object list;
+    private Map<String, Object> list;
 
     public EventUser() {
     }
@@ -38,7 +40,7 @@ public class EventUser {
         return list;
     }
 
-    public void setList(Object list) {
+    public void setList(Map<String, Object> list) {
         this.list = list;
     }
 
