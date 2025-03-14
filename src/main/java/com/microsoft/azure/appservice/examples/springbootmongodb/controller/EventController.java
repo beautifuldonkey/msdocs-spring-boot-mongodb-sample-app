@@ -83,7 +83,10 @@ public class EventController {
         ObjectMapper mapper = new ObjectMapper();
         try {
             EventApplication eventApplication = mapper.convertValue(item, EventApplication.class);
-            EventItem event = eventRepository.findById(eventApplication.getId()).isPresent() ? eventRepository.findById(eventApplication.getId()).get() : null;
+            EventItem event = eventRepository.findById(eventApplication.getId()).orElse(null);
+            if (event == null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found");
+            }
             ArrayList<EventUser> applicants = event.getApplicants();
             if (applicants != null) {
                 for (EventUser applicant : applicants) {
