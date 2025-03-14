@@ -16,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -76,27 +77,28 @@ public class EventController {
      * HTTP POST PARTICIPANT TO EVENT
      */
     @PostMapping(path = "/api/event/participant", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BdpResp addEventParticipant(@RequestBody EventApplication item) {
+    public BdpResp addEventParticipant(@RequestBody Map<String, Object> item) {
         logger.info("POST request access '/api/event/participant' path with item: {}", item);
         BdpResp resp = new BdpResp();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            EventItem event = eventRepository.findById(item.getId()).isPresent() ? eventRepository.findById(item.getId()).get() : null;
+            EventApplication eventApplication = mapper.convertValue(item, EventApplication.class);
+            EventItem event = eventRepository.findById(eventApplication.getId()).isPresent() ? eventRepository.findById(eventApplication.getId()).get() : null;
             ArrayList<EventUser> applicants = event.getApplicants();
             if (applicants != null) {
                 for (EventUser applicant : applicants) {
-                    if (applicant.getId().equals(item.getUser().getId())) {
+                    if (applicant.getId().equals(eventApplication.getUser().getId())) {
                         logger.error("Participant already exists");
                         logger.error("existing appId: {}", applicant.getId());
-                        logger.error("new appId: {}", item.getUser().getId());
+                        logger.error("new appId: {}", eventApplication.getUser().getId());
                         throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant already exists");
                     }
                 }
-                EventUser user = mapper.convertValue(item.getUser(), EventUser.class);
+                EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
                 event.getApplicants().add(user);
             } else {
                 event.setApplicants(new ArrayList<>());
-                EventUser user = mapper.convertValue(item.getUser(), EventUser.class);
+                EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
                 event.getApplicants().add(user);
             }
 
