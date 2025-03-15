@@ -34,9 +34,21 @@ public class EventController {
      * HTTP GET
      */
     @GetMapping(path = "/api/event/{index}", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public EventItem getEventItem(@PathVariable("index") String index) {
+    public BdpResp getEventItem(@PathVariable("index") String index) {
         logger.info("GET request access '/api/event/{}' path.", index);
-        return eventRepository.findById(index).get();
+        BdpResp resp = new BdpResp();
+        try{
+            ObjectMapper objectMapper = new ObjectMapper();
+            EventItem event = eventRepository.findById(index).get();
+            resp.setData(objectMapper.writeValueAsString(event));
+            resp.setStatus("success");
+            resp.setMessage("Event item saved");
+        } catch (Exception e) {
+            logger.error("Get event errors: ", e);
+            resp.setStatus("error");
+            resp.setMessage("Event item not found");
+        }
+        return resp;
     }
 
     /**
