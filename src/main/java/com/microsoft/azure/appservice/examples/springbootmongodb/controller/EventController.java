@@ -89,16 +89,22 @@ public class EventController {
             }
             ArrayList<EventUser> applicants = event.getApplicants();
             if (applicants != null) {
+                EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
+                boolean existingUserApplication = false;
                 for (EventUser applicant : applicants) {
-                    if (applicant.getId().equals(eventApplication.getUser().getId())) {
+                    if (applicant.getId().equals(user.getId())) {
                         logger.error("Participant already exists");
                         logger.error("existing appId: {}", applicant.getId());
                         logger.error("new appId: {}", eventApplication.getUser().getId());
-                        throw new ResponseStatusException(HttpStatus.CONFLICT, "Event participant already exists");
+                        existingUserApplication = true;
                     }
                 }
-                EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
+                if(existingUserApplication) {
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
+                }
+
                 event.getApplicants().add(user);
+
             } else {
                 event.setApplicants(new ArrayList<>());
                 EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
@@ -109,7 +115,10 @@ public class EventController {
             resp.setStatus("success");
             resp.setMessage("Event participant added");
             return resp;
-        } catch (Exception e) {
+        } catch (ResponseStatusException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
+        }
+        catch (Exception e) {
             logger.error("Participant add errors: ", e);
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "Event participant add failed");
         }
