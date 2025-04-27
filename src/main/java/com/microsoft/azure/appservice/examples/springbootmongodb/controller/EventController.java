@@ -118,7 +118,7 @@ public class EventController {
                 event.getApplicants().add(user);
 
             } else {
-                event.setApplicants(new ArrayList<>());
+                event.setApplicants(new ArrayList<EventUser>());
                 EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
                 event.getApplicants().add(user);
             }

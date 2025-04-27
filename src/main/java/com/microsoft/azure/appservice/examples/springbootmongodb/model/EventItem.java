@@ -19,8 +19,8 @@ public class EventItem {
     private String restrictions;
     private String playerLimit;
     private String gameCount;
-    private ArrayList applicants;
-    private ArrayList participants;
+    private ArrayList<EventUser> applicants;
+    private ArrayList<EventUser> participants;
     private ArrayList games;
     private String startDate;
     private String endDate;
