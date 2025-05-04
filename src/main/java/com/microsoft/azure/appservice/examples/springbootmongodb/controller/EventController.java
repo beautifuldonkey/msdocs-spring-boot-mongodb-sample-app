@@ -104,11 +104,7 @@ public class EventController {
                 EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
                 for (EventUser applicant : applicants) {
                     if (applicant.getUserId() != null && applicant.getUserId().equals(user.getUserId())) {
-                        logger.error("Participant already exists");
-                        logger.error("existing appId: {}", applicant.getUserId());
-                        logger.error("new appId: {}", user.getUserId());
                         applicants.remove(applicant);
-                        applicants.add(user);
                     }
                 }
                 event.getApplicants().add(user);
