@@ -102,21 +102,16 @@ public class EventController {
             ArrayList<EventUser> applicants = event.getApplicants();
             if (applicants != null) {
                 EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
-                boolean existingUserApplication = false;
                 for (EventUser applicant : applicants) {
                     if (applicant.getUserId() != null && applicant.getUserId().equals(user.getUserId())) {
                         logger.error("Participant already exists");
                         logger.error("existing appId: {}", applicant.getUserId());
-                        logger.error("new appId: {}", eventApplication.getUser().getUserId());
-                        existingUserApplication = true;
+                        logger.error("new appId: {}", user.getUserId());
+                        applicants.remove(applicant);
+                        applicants.add(user);
                     }
                 }
-                if(existingUserApplication) {
-                    throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
-                }
-
                 event.getApplicants().add(user);
-
             } else {
                 event.setApplicants(new ArrayList<EventUser>());
                 EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
