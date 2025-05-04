@@ -13,7 +13,7 @@ public class EventItem {
     @Id
     private String id;
     private String name;
-    private String owner;
+    private Object owner;
     private String description;
     private String ptsLimit;
     private String restrictions;
@@ -36,11 +36,11 @@ public class EventItem {
         this.description = description;
     }
 
-    public String getOwner() {
+    public Object getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(Object owner) {
         this.owner = owner;
     }
 
