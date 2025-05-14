@@ -102,11 +102,7 @@ public class EventController {
             ArrayList<EventUser> applicants = event.getApplicants();
             if (applicants != null) {
                 EventUser user = mapper.convertValue(eventApplication.getUser(), EventUser.class);
-                for (EventUser applicant : applicants) {
-                    if (applicant.getUserId() != null && applicant.getUserId().equals(user.getUserId())) {
-                        applicants.remove(applicant);
-                    }
-                }
+                applicants.removeIf(applicant -> applicant.getUserId() != null && applicant.getUserId().equals(user.getUserId()));
                 event.getApplicants().add(user);
             } else {
                 event.setApplicants(new ArrayList<EventUser>());
