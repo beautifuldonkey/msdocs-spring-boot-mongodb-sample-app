@@ -67,9 +67,9 @@ public class EoUserController {
             // Search for existing EoUser records by email to ensure no duplicates
             List<EoUser> existingUsers = eoUserRepository.findAll();
             for (EoUser user : existingUsers) {
-                if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(item.getEmail())) {
+                if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(item.getEmail()) && !user.getId().equals(item.getId())) {
                     resp.setStatus("failure");
-                    resp.setMessage("User not saved, email already exists.");
+                    resp.setMessage("User not saved, email already registered to another user.");
                     return resp;
                 }
             }
