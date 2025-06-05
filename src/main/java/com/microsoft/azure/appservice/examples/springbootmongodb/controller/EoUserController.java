@@ -63,6 +63,16 @@ public class EoUserController {
         logger.info("POST request access '/api/eouser' path with item: {}", item);
         BdpResp resp = new BdpResp();
         try {
+
+            // Search for existing EoUser records by email to ensure no duplicates
+            List<EoUser> existingUsers = eoUserRepository.findAll();
+            for (EoUser user : existingUsers) {
+                if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(item.getEmail())) {
+                    resp.setStatus("failure");
+                    resp.setMessage("User not saved, email already exists.");
+                    return resp;
+                }
+            }
             if(item.getId() == null) {
                 item.setId(UUID.randomUUID().toString());
             } else {
@@ -74,7 +84,7 @@ public class EoUserController {
             resp.setMessage("EO user saved");
             return resp;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "EO user save failed");
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "EO user save failed");
         }
     }
 
