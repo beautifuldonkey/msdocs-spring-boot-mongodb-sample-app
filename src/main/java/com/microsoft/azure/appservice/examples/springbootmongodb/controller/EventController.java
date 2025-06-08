@@ -6,6 +6,7 @@ import com.microsoft.azure.appservice.examples.springbootmongodb.model.BdpResp;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventApplication;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventItem;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.EventUser;
+import com.microsoft.azure.appservice.examples.springbootmongodb.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ import java.util.UUID;
 public class EventController {
 
     private static Logger logger = LoggerFactory.getLogger(EventController.class);
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private EventRepository eventRepository;
@@ -113,6 +117,11 @@ public class EventController {
             eventRepository.save(event);
             resp.setStatus("success");
             resp.setMessage("Event participant added");
+
+            String emailTo = "jed.westover1986@gmail.com";
+            String subject = "New Event Participant";
+            String body = "A new participant has signed up to your event.";
+            emailService.sendEmail(emailTo, subject, body);
             return resp;
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
