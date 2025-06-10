@@ -138,10 +138,10 @@ public class EventController {
             resp.setStatus("success");
             resp.setMessage("Event participant added");
 
-//            String emailTo = "jed.westover1986@gmail.com";
-//            String subject = "New Event Participant";
-//            String body = "A new participant has signed up to your event.";
-//            emailService.sendEmail(emailTo, subject, body);
+            String emailTo = "jed.westover1986@gmail.com";
+            String subject = "New Event Participant";
+            String body = "A new participant has signed up to your event.";
+            emailService.sendEmail(emailTo, subject, body);
             return resp;
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
