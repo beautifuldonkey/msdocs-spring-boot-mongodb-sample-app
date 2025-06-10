@@ -37,6 +37,26 @@ public class EventController {
     /**
      * HTTP GET
      */
+    @GetMapping(path = "/api/event/emailTest", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public BdpResp getEventItem() {
+        logger.info("GET request access '/api/event/emailTest' path.");
+        BdpResp resp = new BdpResp();
+        try{
+            String emailTo = "jed.westover1986@gmail.com";
+            String subject = "New Event Participant";
+            String body = "A new participant has signed up to your event.";
+            emailService.sendEmail(emailTo, subject, body);
+        } catch (Exception e) {
+            logger.error("send email test errors: ", e);
+            resp.setStatus("error");
+            resp.setMessage("Send email test failed");
+        }
+        return resp;
+    }
+
+    /**
+     * HTTP GET
+     */
     @GetMapping(path = "/api/event/{index}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public BdpResp getEventItem(@PathVariable("index") String index) {
         logger.info("GET request access '/api/event/{}' path.", index);
@@ -118,10 +138,10 @@ public class EventController {
             resp.setStatus("success");
             resp.setMessage("Event participant added");
 
-            String emailTo = "jed.westover1986@gmail.com";
-            String subject = "New Event Participant";
-            String body = "A new participant has signed up to your event.";
-            emailService.sendEmail(emailTo, subject, body);
+//            String emailTo = "jed.westover1986@gmail.com";
+//            String subject = "New Event Participant";
+//            String body = "A new participant has signed up to your event.";
+//            emailService.sendEmail(emailTo, subject, body);
             return resp;
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Participant already exists");
