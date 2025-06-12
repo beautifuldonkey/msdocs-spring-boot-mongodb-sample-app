@@ -11,12 +11,14 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    private String fromEmail = "jed@beautifuldonkeyproductions.com";
+
     public void sendEmail(String to, String subject, String body) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom("jed@beautifuldonkeyproductions.com");
+        message.setFrom(fromEmail);
         mailSender.send(message);
     }
 
@@ -34,7 +36,7 @@ public class EmailService {
             String body = "A new participant has signed up to your event.";
 
             // Setting up necessary details
-            mailMessage.setFrom("jed@beautifuldonkeyproductions.com");
+            mailMessage.setFrom(fromEmail);
             mailMessage.setTo(emailTo);
             mailMessage.setText(body);
             mailMessage.setSubject(subject);
