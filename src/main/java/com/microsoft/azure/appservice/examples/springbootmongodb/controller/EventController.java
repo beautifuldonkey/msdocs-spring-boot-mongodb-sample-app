@@ -43,26 +43,9 @@ public class EventController {
         BdpResp resp = new BdpResp();
         try{
             String emailTo = "jed.westover1986@gmail.com";
-            String subject = "New Event Participant";
-            String body = "A new participant has signed up to your event.";
+            String subject = "Email Test";
+            String body = "Sending a test email.";
             emailService.sendEmail(emailTo, subject, body);
-        } catch (Exception e) {
-            logger.error("send email test errors: ", e);
-            resp.setStatus("error");
-            resp.setMessage("Send email test failed");
-        }
-        return resp;
-    }
-
-    /**
-     * HTTP GET
-     */
-    @GetMapping(path = "/api/event/emailTest2", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public BdpResp emailTest2() {
-        logger.info("GET request access '/api/event/emailTest2' path.");
-        BdpResp resp = new BdpResp();
-        try{
-            emailService.sendSimpleMail();
         } catch (Exception e) {
             logger.error("send email test errors: ", e);
             resp.setStatus("error");

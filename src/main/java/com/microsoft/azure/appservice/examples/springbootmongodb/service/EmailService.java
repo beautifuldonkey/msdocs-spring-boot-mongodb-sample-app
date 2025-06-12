@@ -18,37 +18,7 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom(fromEmail);
+//        message.setFrom(fromEmail);
         mailSender.send(message);
-    }
-
-    public String sendSimpleMail()
-    {
-
-        // Try block to check for exceptions
-        try {
-
-            // Creating a simple mail message
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-
-            String emailTo = "jed.westover1986@gmail.com";
-            String subject = "New Event Participant";
-            String body = "A new participant has signed up to your event.";
-
-            // Setting up necessary details
-            mailMessage.setFrom(fromEmail);
-            mailMessage.setTo(emailTo);
-            mailMessage.setText(body);
-            mailMessage.setSubject(subject);
-
-            // Sending the mail
-            mailSender.send(mailMessage);
-            return "Mail Sent Successfully...";
-        }
-
-        // Catch block to handle the exceptions
-        catch (Exception e) {
-            return "Error while Sending Mail";
-        }
     }
 }
