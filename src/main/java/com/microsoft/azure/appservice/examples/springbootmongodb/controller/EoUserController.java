@@ -3,6 +3,7 @@ package com.microsoft.azure.appservice.examples.springbootmongodb.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.azure.appservice.examples.springbootmongodb.dao.EoUserRepository;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.*;
+import com.microsoft.azure.appservice.examples.springbootmongodb.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +24,9 @@ public class EoUserController {
 
     @Autowired
     private EoUserRepository eoUserRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public EoUserController() {
     }
@@ -49,18 +55,18 @@ public class EoUserController {
     /**
      * HTTP GET ALL
      */
-    @GetMapping(path = "/api/eouser", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/api/eouser/list", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<EoUser> getAllEoUsers() {
-        logger.info("GET request access '/api/eouser' path.");
+        logger.info("GET request access '/api/eouser/list' path.");
         return eoUserRepository.findAll();
     }
 
     /**
      * HTTP POST NEW ONE
      */
-    @PostMapping(path = "/api/eouser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/eouser/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BdpResp addNewEoUser(@RequestBody EoUser item) {
-        logger.info("POST request access '/api/eouser' path with item: {}", item);
+        logger.info("POST request access '/api/eouser/register' path with item: {}", item);
         BdpResp resp = new BdpResp();
         try {
 
@@ -88,12 +94,87 @@ public class EoUserController {
         }
     }
 
+    @PostMapping(path = "/api/eouser/loginRequest", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BdpResp loginRequest(@RequestBody String email) {
+        logger.info("POST request access '/api/eouser/loginRequest' path with item: {}", email);
+        BdpResp resp = new BdpResp();
+
+        try {
+            EoUser user = eoUserRepository.findByEmail(email);
+
+            if (user == null) {
+                resp.setStatus("error");
+                resp.setMessage("User not found");
+                return resp;
+            }
+
+            // Generate 6-digit auth code
+            int authCode = new Random().nextInt(900000) + 100000;
+
+            // Set auth code expiration time (10 minutes from now)
+            LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
+
+            // Send auth code to user email
+            String emailBody = String.format("Hello %s,\n\nYour authentication code is: %d.\nThis code will expire at: %s.",
+                                             user.getUsername(), authCode, expirationTime);
+            emailService.sendEmail(user.getEmail(), "Your Authentication Code", emailBody);
+
+            // Send success response with auth code expiration time
+            resp.setStatus("success");
+            resp.setMessage("Authentication code sent to your email");
+            resp.setData(expirationTime.toString());
+            return resp;
+
+        } catch (Exception e) {
+            logger.error("Login errors: ", e);
+            resp.setStatus("error");
+            resp.setMessage("Login failed");
+        }
+        return resp;
+    }
+
+    @PostMapping(path = "/api/eouser/loginUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BdpResp loginUser(@RequestBody EoUser item) {
+        logger.info("POST request access '/api/eouser/login' path with item: {}", item);
+        BdpResp resp = new BdpResp();
+
+        try {
+            EoUser user = eoUserRepository.findByEmail(item.getEmail());
+
+            if (user == null || !user.getAuthCode().equals(item.getAuthCode())) {
+                resp.setStatus("error");
+                resp.setMessage("Invalid email or authentication code");
+                return resp;
+            }
+
+            // Check if auth code is expired
+            LocalDateTime expirationTime = LocalDateTime.parse(user.getAuthCodeExpires());
+            if (LocalDateTime.now().isAfter(expirationTime)) {
+                resp.setStatus("error");
+                resp.setMessage("Authentication code has expired");
+                return resp;
+            }
+
+            // Successful login
+            resp.setStatus("success");
+            resp.setMessage("Login successful");
+            resp.setData(user.getId());
+            return resp;
+
+        } catch (Exception e) {
+            logger.error("Login errors: ", e);
+            resp.setStatus("error");
+            resp.setMessage("Login failed");
+        }
+        return resp;
+    }
+
     /**
      * HTTP PUT UPDATE
      */
-    @PutMapping(path = "/api/eouser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/api/eouser/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String updateEoUser(@RequestBody EoUser item) {
-        logger.info("PUT request access '/api/eouser' path with item {}", item);
+        logger.info("PUT request access '/api/eouser/update' path with item {}", item);
         try {
             eoUserRepository.deleteById(item.getId());
             eoUserRepository.save(item);
@@ -107,9 +188,9 @@ public class EoUserController {
     /**
      * HTTP DELETE
      */
-    @DeleteMapping("/api/eouser/{id}")
+    @DeleteMapping("/api/eouser/remove/{id}")
     public BdpResp deleteEoUser(@PathVariable("id") String id) {
-        logger.info("DELETE request access '/api/eouser/{}' path.", id);
+        logger.info("DELETE request access '/api/eouser/remove/{}' path.", id);
         BdpResp resp = new BdpResp();
         try {
             eoUserRepository.deleteById(id);

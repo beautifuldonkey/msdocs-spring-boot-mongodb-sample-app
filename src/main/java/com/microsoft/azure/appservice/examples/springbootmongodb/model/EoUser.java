@@ -10,11 +10,12 @@ public class EoUser {
     @Id
     private String id;
     private String username;
-    private boolean hasSub;
+    private boolean hasEventCreatorSub;
     private String email;
+    private String authCode;
+    private String authCodeExpires;
 
-    public EoUser() {
-    }
+    public EoUser() {}
 
     public String getUsername() {
         return username;
@@ -32,12 +33,12 @@ public class EoUser {
         this.id = id;
     }
 
-    public boolean isHasSub() {
-        return hasSub;
+    public boolean hasEventCreatorSub() {
+        return hasEventCreatorSub;
     }
 
-    public void setHasSub(boolean hasSub) {
-        this.hasSub = hasSub;
+    public void setHasEventCreatorSub(boolean hasSub) {
+        this.hasEventCreatorSub = hasSub;
     }
 
     public String getEmail() {
@@ -46,6 +47,22 @@ public class EoUser {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getAuthCode() {
+        return authCode;
+    }
+
+    public void setAuthCode(String authCode) {
+        this.authCode = authCode;
+    }
+
+    public String getAuthCodeExpires() {
+        return authCodeExpires;
+    }
+
+    public void setAuthCodeExpires(String authCodeExpires) {
+        this.authCodeExpires = authCodeExpires;
     }
 
     @Override
