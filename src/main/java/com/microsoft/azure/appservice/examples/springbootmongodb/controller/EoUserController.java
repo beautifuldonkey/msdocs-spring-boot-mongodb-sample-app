@@ -85,13 +85,31 @@ public class EoUserController {
                 eoUserRepository.deleteById(item.getId());
             }
             EoUser createdItem = eoUserRepository.save(item);
+            LocalDateTime expirationTime = sendUserAuth(createdItem);
             resp.setData(createdItem.getId());
             resp.setStatus("success");
-            resp.setMessage("EO user saved");
+            resp.setMessage("New user registered. Authentication code sent to your email.");
             return resp;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "EO user save failed");
         }
+    }
+
+    private LocalDateTime sendUserAuth(EoUser user) {
+        // Generate 6-digit auth code
+        int authCode = new Random().nextInt(900000) + 100000;
+
+        // Set auth code expiration time (10 minutes from now)
+        LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
+
+        // Send auth code to user email
+        String emailBody = String.format("Hello %s,\n\nYour authentication code is: %d.\nThis code will expire at: %s.",
+                user.getUsername(), authCode, expirationTime);
+        user.setAuthCode(String.valueOf(authCode));
+        user.setAuthCodeExpires(expirationTime.toString());
+        eoUserRepository.save(user);
+        emailService.sendEmail(user.getEmail(), "Your Authentication Code", emailBody);
+        return expirationTime;
     }
 
     @PostMapping(path = "/api/eouser/loginRequest", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -108,23 +126,13 @@ public class EoUserController {
                 return resp;
             }
 
-            // Generate 6-digit auth code
-            int authCode = new Random().nextInt(900000) + 100000;
-
-            // Set auth code expiration time (10 minutes from now)
-            LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(10);
-
-            // Send auth code to user email
-            String emailBody = String.format("Hello %s,\n\nYour authentication code is: %d.\nThis code will expire at: %s.",
-                                             user.getUsername(), authCode, expirationTime);
-            emailService.sendEmail(user.getEmail(), "Your Authentication Code", emailBody);
+            LocalDateTime expirationTime = sendUserAuth(user);
 
             // Send success response with auth code expiration time
             resp.setStatus("success");
             resp.setMessage("Authentication code sent to your email");
             resp.setData(expirationTime.toString());
             return resp;
-
         } catch (Exception e) {
             logger.error("Login errors: ", e);
             resp.setStatus("error");
