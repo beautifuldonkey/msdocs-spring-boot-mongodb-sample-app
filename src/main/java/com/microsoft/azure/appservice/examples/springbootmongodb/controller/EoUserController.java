@@ -164,9 +164,10 @@ public class EoUserController {
             }
 
             // Successful login
+            ObjectMapper objectMapper = new ObjectMapper();
+            resp.setData(objectMapper.writeValueAsString(user));
             resp.setStatus("success");
             resp.setMessage("Login successful");
-            resp.setData(user.getId());
             return resp;
 
         } catch (Exception e) {
