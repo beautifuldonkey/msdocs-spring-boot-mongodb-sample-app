@@ -113,12 +113,12 @@ public class EoUserController {
     }
 
     @PostMapping(path = "/api/eouser/loginRequest", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BdpResp loginRequest(@RequestBody String email) {
-        logger.info("POST request access '/api/eouser/loginRequest' path with item: {}", email);
+    public BdpResp loginRequest(@RequestBody EoUser userReq) {
+        logger.info("POST request access '/api/eouser/loginRequest' path with item: {}", userReq);
         BdpResp resp = new BdpResp();
 
         try {
-            EoUser user = eoUserRepository.findByEmail(email);
+            EoUser user = eoUserRepository.findByEmail(userReq.getEmail());
 
             if (user == null) {
                 resp.setStatus("error");
