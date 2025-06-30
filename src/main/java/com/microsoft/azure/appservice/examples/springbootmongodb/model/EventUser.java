@@ -7,6 +7,7 @@ public class EventUser {
     private String userId;
     private String username;
     private String status;
+    private String rejectionNotes;
     private Map<String, Object> list;
 
     public EventUser() {
@@ -42,6 +43,14 @@ public class EventUser {
 
     public void setList(Map<String, Object> list) {
         this.list = list;
+    }
+
+    public String getRejectionNotes() {
+        return rejectionNotes;
+    }
+
+    public void setRejectionNotes(String rejectionNotes) {
+        this.rejectionNotes = rejectionNotes;
     }
 
     @Override
