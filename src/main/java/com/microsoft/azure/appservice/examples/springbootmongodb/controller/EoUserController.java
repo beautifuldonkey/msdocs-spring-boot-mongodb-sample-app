@@ -182,12 +182,15 @@ public class EoUserController {
      * HTTP PUT UPDATE
      */
     @PutMapping(path = "/api/eouser/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String updateEoUser(@RequestBody EoUser item) {
+    public BdpResp updateEoUser(@RequestBody EoUser item) {
         logger.info("PUT request access '/api/eouser/update' path with item {}", item);
+        BdpResp resp = new BdpResp();
         try {
             eoUserRepository.deleteById(item.getId());
             eoUserRepository.save(item);
-            return "EO user updated";
+            resp.setStatus("success");
+            resp.setMessage("EO user updated");
+            return resp;
         } catch (Exception e) {
             logger.error("Update errors: ", e);
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "EO user not found");
