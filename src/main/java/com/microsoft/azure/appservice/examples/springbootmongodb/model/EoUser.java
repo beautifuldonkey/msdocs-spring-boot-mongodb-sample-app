@@ -11,6 +11,9 @@ public class EoUser {
     private String id;
     private String username;
     private boolean hasEventCreatorSub;
+    private boolean hasSubDemo;
+    private String demoStartDate;
+    private String demoEndDate;
     private String email;
     private String authCode;
     private String authCodeExpires;
@@ -31,10 +34,6 @@ public class EoUser {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public boolean hasEventCreatorSub() {
-        return hasEventCreatorSub;
     }
 
     public void setHasEventCreatorSub(boolean hasSub) {
@@ -63,6 +62,34 @@ public class EoUser {
 
     public void setAuthCodeExpires(String authCodeExpires) {
         this.authCodeExpires = authCodeExpires;
+    }
+
+    public boolean isHasEventCreatorSub() {
+        return hasEventCreatorSub;
+    }
+
+    public boolean isHasSubDemo() {
+        return hasSubDemo;
+    }
+
+    public void setHasSubDemo(boolean hasSubDemo) {
+        this.hasSubDemo = hasSubDemo;
+    }
+
+    public String getDemoStartDate() {
+        return demoStartDate;
+    }
+
+    public void setDemoStartDate(String demoStartDate) {
+        this.demoStartDate = demoStartDate;
+    }
+
+    public String getDemoEndDate() {
+        return demoEndDate;
+    }
+
+    public void setDemoEndDate(String demoEndDate) {
+        this.demoEndDate = demoEndDate;
     }
 
     @Override
