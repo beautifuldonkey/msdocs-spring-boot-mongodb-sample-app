@@ -14,7 +14,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private String fromEmail = "support@beautifuldonkeyproductions.com";
+    private String fromEmail = "do-not-reply@beautifuldonkeyproductions.com";
 
     public void sendEmail(String to, String subject, String body) {
         try {
@@ -26,8 +26,8 @@ public class EmailService {
 //            message.setTo(InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(body);
-            String aliasEmail = "support@beautifuldonkeyproductions.com";
-            String aliasName = "Support";
+            String aliasEmail = "do-not-reply@beautifuldonkeyproductions.com";
+            String aliasName = "Do not reply";
             message.setFrom(new InternetAddress(aliasEmail, aliasName));
 //        message.setFrom(fromEmail);
             mailSender.send(message);
