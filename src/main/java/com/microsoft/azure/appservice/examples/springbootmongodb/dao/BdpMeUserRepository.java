@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EoUserRepository extends MongoRepository<BdpMeUser, String> {
+public interface BdpMeUserRepository extends MongoRepository<BdpMeUser, String> {
     BdpMeUser findByEmail(String email);
 }

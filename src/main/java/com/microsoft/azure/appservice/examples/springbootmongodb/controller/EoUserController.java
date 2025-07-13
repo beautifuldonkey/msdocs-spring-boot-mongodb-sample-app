@@ -1,7 +1,7 @@
 package com.microsoft.azure.appservice.examples.springbootmongodb.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.azure.appservice.examples.springbootmongodb.dao.EoUserRepository;
+import com.microsoft.azure.appservice.examples.springbootmongodb.dao.BdpMeUserRepository;
 import com.microsoft.azure.appservice.examples.springbootmongodb.model.*;
 import com.microsoft.azure.appservice.examples.springbootmongodb.service.EmailService;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class EoUserController {
     private static Logger logger = LoggerFactory.getLogger(EoUserController.class);
 
     @Autowired
-    private EoUserRepository eoUserRepository;
+    private BdpMeUserRepository bdpMeUserRepository;
 
     @Autowired
     private EmailService emailService;
@@ -40,7 +40,7 @@ public class EoUserController {
         BdpResp resp = new BdpResp();
         try{
             ObjectMapper objectMapper = new ObjectMapper();
-            BdpMeUser user = eoUserRepository.findById(index).get();
+            BdpMeUser user = bdpMeUserRepository.findById(index).get();
             resp.setData(objectMapper.writeValueAsString(user));
             resp.setStatus("success");
             resp.setMessage("EO user saved");
@@ -58,7 +58,7 @@ public class EoUserController {
     @GetMapping(path = "/api/BdpMeUser/list", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<BdpMeUser> getAllEoUsers() {
         logger.info("GET request access '/api/BdpMeUser/list' path.");
-        return eoUserRepository.findAll();
+        return bdpMeUserRepository.findAll();
     }
 
     /**
@@ -71,7 +71,7 @@ public class EoUserController {
         try {
 
             // Search for existing BdpMeUser records by email to ensure no duplicates
-            List<BdpMeUser> existingUsers = eoUserRepository.findAll();
+            List<BdpMeUser> existingUsers = bdpMeUserRepository.findAll();
             for (BdpMeUser user : existingUsers) {
                 if (user.getEmail() != null && user.getEmail().equalsIgnoreCase(item.getEmail()) && !user.getId().equals(item.getId())) {
                     resp.setStatus("failure");
@@ -82,9 +82,9 @@ public class EoUserController {
             if(item.getId() == null) {
                 item.setId(UUID.randomUUID().toString());
             } else {
-                eoUserRepository.deleteById(item.getId());
+                bdpMeUserRepository.deleteById(item.getId());
             }
-            BdpMeUser createdItem = eoUserRepository.save(item);
+            BdpMeUser createdItem = bdpMeUserRepository.save(item);
             LocalDateTime expirationTime = sendUserAuth(createdItem);
             resp.setData(createdItem.getId());
             resp.setStatus("success");
@@ -107,7 +107,7 @@ public class EoUserController {
                 user.getUsername(), authCode, expirationTime);
         user.setAuthCode(String.valueOf(authCode));
         user.setAuthCodeExpires(expirationTime.toString());
-        eoUserRepository.save(user);
+        bdpMeUserRepository.save(user);
         emailService.sendEmail(user.getEmail(), "Your Authentication Code", emailBody);
         return expirationTime;
     }
@@ -118,7 +118,7 @@ public class EoUserController {
         BdpResp resp = new BdpResp();
 
         try {
-            BdpMeUser user = eoUserRepository.findByEmail(userReq.getEmail());
+            BdpMeUser user = bdpMeUserRepository.findByEmail(userReq.getEmail());
 
             if (user == null) {
                 resp.setStatus("error");
@@ -147,7 +147,7 @@ public class EoUserController {
         BdpResp resp = new BdpResp();
 
         try {
-            BdpMeUser user = eoUserRepository.findByEmail(item.getEmail());
+            BdpMeUser user = bdpMeUserRepository.findByEmail(item.getEmail());
 
             if (user == null || !user.getAuthCode().equals(item.getAuthCode())) {
                 resp.setStatus("error");
@@ -186,8 +186,8 @@ public class EoUserController {
         logger.info("PUT request access '/api/BdpMeUser/update' path with item {}", item);
         BdpResp resp = new BdpResp();
         try {
-            eoUserRepository.deleteById(item.getId());
-            eoUserRepository.save(item);
+            bdpMeUserRepository.deleteById(item.getId());
+            bdpMeUserRepository.save(item);
             resp.setStatus("success");
             resp.setMessage("EO user updated");
             return resp;
@@ -205,7 +205,7 @@ public class EoUserController {
         logger.info("DELETE request access '/api/BdpMeUser/remove/{}' path.", id);
         BdpResp resp = new BdpResp();
         try {
-            eoUserRepository.deleteById(id);
+            bdpMeUserRepository.deleteById(id);
             resp.setStatus("success");
             resp.setMessage("EO user deleted");
             return resp;
