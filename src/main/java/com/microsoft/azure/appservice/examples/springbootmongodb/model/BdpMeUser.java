@@ -5,7 +5,7 @@ package com.microsoft.azure.appservice.examples.springbootmongodb.model;
 
 import org.springframework.data.annotation.Id;
 
-public class EoUser {
+public class BdpMeUser {
 
     @Id
     private String id;
@@ -18,7 +18,7 @@ public class EoUser {
     private String authCode;
     private String authCodeExpires;
 
-    public EoUser() {}
+    public BdpMeUser() {}
 
     public String getUsername() {
         return username;
