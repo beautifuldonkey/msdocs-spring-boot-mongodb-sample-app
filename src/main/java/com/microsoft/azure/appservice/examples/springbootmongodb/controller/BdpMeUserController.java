@@ -18,9 +18,9 @@ import java.util.Random;
 import java.util.UUID;
 
 @RestController
-public class EoUserController {
+public class BdpMeUserController {
 
-    private static Logger logger = LoggerFactory.getLogger(EoUserController.class);
+    private static Logger logger = LoggerFactory.getLogger(BdpMeUserController.class);
 
     @Autowired
     private BdpMeUserRepository bdpMeUserRepository;
@@ -28,15 +28,15 @@ public class EoUserController {
     @Autowired
     private EmailService emailService;
 
-    public EoUserController() {
+    public BdpMeUserController() {
     }
 
     /**
      * HTTP GET
      */
-    @GetMapping(path = "/api/BdpMeUser/{index}", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/api/user/{index}", produces = {MediaType.APPLICATION_JSON_VALUE})
     public BdpResp getEoUser(@PathVariable("index") String index) {
-        logger.info("GET request access '/api/BdpMeUser/{}' path.", index);
+        logger.info("GET request access '/api/user/{}' path.", index);
         BdpResp resp = new BdpResp();
         try{
             ObjectMapper objectMapper = new ObjectMapper();
@@ -55,18 +55,18 @@ public class EoUserController {
     /**
      * HTTP GET ALL
      */
-    @GetMapping(path = "/api/BdpMeUser/list", produces = {MediaType.APPLICATION_JSON_VALUE})
+    @GetMapping(path = "/api/user/list", produces = {MediaType.APPLICATION_JSON_VALUE})
     public List<BdpMeUser> getAllEoUsers() {
-        logger.info("GET request access '/api/BdpMeUser/list' path.");
+        logger.info("GET request access '/api/user/list' path.");
         return bdpMeUserRepository.findAll();
     }
 
     /**
      * HTTP POST NEW ONE
      */
-    @PostMapping(path = "/api/BdpMeUser/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/user/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BdpResp addNewEoUser(@RequestBody BdpMeUser item) {
-        logger.info("POST request access '/api/BdpMeUser/register' path with item: {}", item);
+        logger.info("POST request access '/api/user/register' path with item: {}", item);
         BdpResp resp = new BdpResp();
         try {
 
@@ -112,9 +112,9 @@ public class EoUserController {
         return expirationTime;
     }
 
-    @PostMapping(path = "/api/BdpMeUser/loginRequest", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/user/loginRequest", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BdpResp loginRequest(@RequestBody BdpMeUser userReq) {
-        logger.info("POST request access '/api/BdpMeUser/loginRequest' path with item: {}", userReq);
+        logger.info("POST request access '/api/user/loginRequest' path with item: {}", userReq);
         BdpResp resp = new BdpResp();
 
         try {
@@ -141,9 +141,9 @@ public class EoUserController {
         return resp;
     }
 
-    @PostMapping(path = "/api/BdpMeUser/loginUser", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/api/user/loginUser", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BdpResp loginUser(@RequestBody BdpMeUser item) {
-        logger.info("POST request access '/api/BdpMeUser/login' path with item: {}", item);
+        logger.info("POST request access '/api/user/login' path with item: {}", item);
         BdpResp resp = new BdpResp();
 
         try {
@@ -181,9 +181,9 @@ public class EoUserController {
     /**
      * HTTP PUT UPDATE
      */
-    @PutMapping(path = "/api/BdpMeUser/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/api/user/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public BdpResp updateEoUser(@RequestBody BdpMeUser item) {
-        logger.info("PUT request access '/api/BdpMeUser/update' path with item {}", item);
+        logger.info("PUT request access '/api/user/update' path with item {}", item);
         BdpResp resp = new BdpResp();
         try {
             bdpMeUserRepository.deleteById(item.getId());
@@ -200,9 +200,9 @@ public class EoUserController {
     /**
      * HTTP DELETE
      */
-    @DeleteMapping("/api/BdpMeUser/remove/{id}")
+    @DeleteMapping("/api/user/remove/{id}")
     public BdpResp deleteEoUser(@PathVariable("id") String id) {
-        logger.info("DELETE request access '/api/BdpMeUser/remove/{}' path.", id);
+        logger.info("DELETE request access '/api/user/remove/{}' path.", id);
         BdpResp resp = new BdpResp();
         try {
             bdpMeUserRepository.deleteById(id);
