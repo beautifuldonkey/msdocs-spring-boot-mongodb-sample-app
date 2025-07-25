@@ -10,7 +10,7 @@ public class BdpMeUser {
     @Id
     private String id;
     private String username;
-    private boolean hasEventCreatorSub;
+    private boolean hasSubscription;
     private boolean hasSubDemo;
     private String demoStartDate;
     private String demoEndDate;
@@ -34,10 +34,6 @@ public class BdpMeUser {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setHasEventCreatorSub(boolean hasSub) {
-        this.hasEventCreatorSub = hasSub;
     }
 
     public String getEmail() {
@@ -64,10 +60,6 @@ public class BdpMeUser {
         this.authCodeExpires = authCodeExpires;
     }
 
-    public boolean isHasEventCreatorSub() {
-        return hasEventCreatorSub;
-    }
-
     public boolean isHasSubDemo() {
         return hasSubDemo;
     }
@@ -90,6 +82,14 @@ public class BdpMeUser {
 
     public void setDemoEndDate(String demoEndDate) {
         this.demoEndDate = demoEndDate;
+    }
+
+    public boolean isHasSubscription() {
+        return hasSubscription;
+    }
+
+    public void setHasSubscription(boolean hasSubscription) {
+        this.hasSubscription = hasSubscription;
     }
 
     @Override
