@@ -63,19 +63,20 @@ public class GameLogsController {
      * HTTP POST NEW ONE
      */
     @PostMapping(path = "/api/gamelogs", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BdpResp addNewEventItem(@RequestBody GameLogsEntry item) {
-        logger.info("POST request access '/api/gamelogs' path with item: {}", item);
+    public BdpResp addGamelogs(@RequestBody List<GameLogsEntry> items) {
+        logger.info("POST request access '/api/gamelogs' path with item: {}", items);
         BdpResp resp = new BdpResp();
         try {
-            if(item.getId() == null) {
-                item.setId(UUID.randomUUID().toString());
-            } else {
-                gameLogsRepository.deleteById(item.getId());
+            for(GameLogsEntry item : items) {
+                if(item.getId() == null) {
+                    item.setId(UUID.randomUUID().toString());
+                } else {
+                    gameLogsRepository.deleteById(item.getId());
+                }
+                gameLogsRepository.save(item);
             }
-            GameLogsEntry createdItem = gameLogsRepository.save(item);
-            resp.setData(createdItem.getId());
             resp.setStatus("success");
-            resp.setMessage("Event item saved");
+            resp.setMessage("Game logs saved");
             return resp;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item save failed");
