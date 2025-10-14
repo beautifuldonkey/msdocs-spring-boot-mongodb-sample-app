@@ -14,6 +14,7 @@ public class EventItem {
     private String id;
     private String name;
     private Object owner;
+    private String type;
     private String description;
     private String ptsLimit;
     private String restrictions;
@@ -130,6 +131,14 @@ public class EventItem {
 
     public void setGames(ArrayList games) {
         this.games = games;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
