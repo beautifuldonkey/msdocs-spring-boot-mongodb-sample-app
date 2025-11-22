@@ -18,22 +18,37 @@ public class EmailService {
 
     public void sendEmail(String to, String subject, String body) {
         try {
-//            SimpleMailMessage message = new SimpleMailMessage();
-//            MimeMessage message = new MimeMessage(session);
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
             messageHelper.setTo(InternetAddress.parse(to));
-//            message.setTo(InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(body);
             String aliasEmail = "do-not-reply@beautifuldonkeyproductions.com";
             String aliasName = "Do not reply";
             message.setFrom(new InternetAddress(aliasEmail, aliasName));
-//        message.setFrom(fromEmail);
             mailSender.send(message);
         } catch (Exception e) {
             throw new RuntimeException("Failed to send email", e);
         }
 
     }
+
+    public void sendEmailAttachment(String to, String subject, String body, String attachmentData, String attachmentFilename) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
+            messageHelper.setTo(InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setText(body);
+            String aliasEmail = "do-not-reply@beautifuldonkeyproductions.com";
+            String aliasName = "Do not reply";
+            message.setFrom(new InternetAddress(aliasEmail, aliasName));
+
+            messageHelper.addAttachment(attachmentFilename, new jakarta.mail.util.ByteArrayDataSource(attachmentData, "text/plain"));
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send email with attachment", e);
+        }
+    }
+
 }
