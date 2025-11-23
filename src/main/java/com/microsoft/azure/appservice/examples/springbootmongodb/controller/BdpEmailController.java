@@ -31,7 +31,9 @@ public class BdpEmailController {
         BdpResp resp = new BdpResp();
         try {
 
-            emailService.sendEmailAttachment(item.getEmail(), "Game export","Exported games attached.", item.getAttachmentData(), "exported_games.txt");
+
+            emailService.sendEmail(item.getEmail(), "Game export","Your exported games will be available soon.");
+//            emailService.sendEmailAttachment(item.getEmail(), "Game export","Exported games attached.", item.getAttachmentData(), "exported_games.txt");
 
             resp.setStatus("success");
             resp.setMessage("Exported games sent.");
