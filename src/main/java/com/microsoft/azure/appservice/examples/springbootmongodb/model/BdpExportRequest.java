@@ -3,10 +3,12 @@
 
 package com.microsoft.azure.appservice.examples.springbootmongodb.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BdpExportRequest {
 
     private String email;
-    private String attachmentData;
+    private MultipartFile attachmentData;
 
     public BdpExportRequest() {}
 
@@ -18,11 +20,11 @@ public class BdpExportRequest {
         this.email = email;
     }
 
-    public String getAttachmentData() {
+    public MultipartFile getAttachmentData() {
         return attachmentData;
     }
 
-    public void setAttachmentData(String attachmentData) {
+    public void setAttachmentData(MultipartFile attachmentData) {
         this.attachmentData = attachmentData;
     }
 
