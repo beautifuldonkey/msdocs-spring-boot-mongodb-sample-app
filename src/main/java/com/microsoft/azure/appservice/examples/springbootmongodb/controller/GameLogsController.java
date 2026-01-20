@@ -7,6 +7,9 @@ import com.microsoft.azure.appservice.examples.springbootmongodb.model.GameLogsE
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -40,11 +43,11 @@ public class GameLogsController {
             GameLogsEntry gameLogsEntry = gameLogsRepository.findById(index).get();
             resp.setData(objectMapper.writeValueAsString(gameLogsEntry));
             resp.setStatus("success");
-            resp.setMessage("Event item saved");
+            resp.setMessage("game long item found");
         } catch (Exception e) {
             logger.error("Get event errors: ", e);
             resp.setStatus("error");
-            resp.setMessage("Event item not found");
+            resp.setMessage("game log item not found");
         }
         return resp;
     }
@@ -56,7 +59,9 @@ public class GameLogsController {
     public List<GameLogsEntry> getAllEventItems() {
         logger.info("GET request access '/api/gamelogs' path.");
 
-        return gameLogsRepository.findAll();
+        // limit number of returned items to 100
+        Pageable pageable = PageRequest.of(0, 100, Sort.by(Sort.Direction.ASC, "id"));
+        return gameLogsRepository.findAll(pageable).getContent();
     }
 
     /**
@@ -79,7 +84,7 @@ public class GameLogsController {
             resp.setMessage("Game logs saved");
             return resp;
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Event item save failed");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "game log item save failed");
         }
     }
 
@@ -92,10 +97,10 @@ public class GameLogsController {
         try {
             gameLogsRepository.deleteById(item.getId());
             gameLogsRepository.save(item);
-            return "Event item updated";
+            return "game log item updated";
         } catch (Exception e) {
             logger.error("Update errors: ", e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event item not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "game log item not found");
         }
     }
 
@@ -109,11 +114,11 @@ public class GameLogsController {
         try {
             gameLogsRepository.deleteById(id);
             resp.setStatus("success");
-            resp.setMessage("Event deleted");
+            resp.setMessage("game log deleted");
             return resp;
         } catch (Exception e) {
             logger.error("Delete errors: ", e);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event delete failed");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "game log delete failed");
         }
 
     }
